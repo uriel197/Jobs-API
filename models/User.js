@@ -24,11 +24,17 @@ const UserSchema = new mongoose.Schema({
     },
 });
 
-UserSchema.pre('save', async function(next) {
+UserSchema.pre('save', async function() {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
-    next();
-})
+})              /* 1 */
 
 
 module.exports = mongoose.model('User', UserSchema);
+
+
+/*********** COMMENTS *********** 
+
+*** 1: model middleware hooks into static functions on a Model class,  In model middleware functions, "this" refers to the model. because we are using "async" we dont need the "next()" function.
+
+*/
