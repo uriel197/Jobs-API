@@ -3,13 +3,8 @@ const { StatusCodes } = require('http-status-codes');
 const bcrypt = require('bcryptjs');
 
 const register = async (req, res) => {
-    const { name, email, password } = req.body;
-
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    const tempUser = { name, email, password: hashedPassword };
-
-    const user = await User.create({ ...tempUser });
+    const user = await User.create({ ...req.body });
+    // console.log({ StatusCodes });            /* 1 */
     res.status(StatusCodes.CREATED).json({ user });
 }
 
@@ -21,3 +16,16 @@ module.exports = {
     register,
     login,
 }
+
+/************** COMMENTS **************
+
+*** 1: this prints a list of all the status codes and their respective names, and the names are all listed in uppercase which is why we use "CREATED" OR "BAD_REQUEST", ETC... example of console.log({StatusCodes}):
+StatusCodes: {
+    '100': 'CONTINUE',
+    '101': 'SWITCHING_PROTOCOLS',
+    '102': 'PROCESSING',
+    '103': 'EARLY_HINTS',
+    '200': 'OK',
+    '201': 'CREATED',
+
+*/
