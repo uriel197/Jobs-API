@@ -31,9 +31,13 @@ UserSchema.pre('save', async function() {
 })              /* 1 */
 
 UserSchema.methods.createJWT = function() {
-    return jwt.sign({ userId: this._id, name: this.name }, 'jwtSecret', { expiresIn: '30d' })
+    return jwt.sign({ userId: this._id, name: this.name }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_LIFETIME });
 };
 
+UserSchema.methods.matchPasswords = async function(userPassword) {
+    const goodMatch = await bcrypt.compare(userPassword, this.password);
+    return goodMatch;
+}
 
 module.exports = mongoose.model('User', UserSchema);
 
