@@ -11,6 +11,9 @@ const connectDB = require('./db/connect');
 const authRouter = require('./routes/auth');
 const jobsRouter = require('./routes/jobs');
 
+// authentication of job Routes
+const authMiddleware = require('./middleware/auth');
+
 // error handlers
 const errorHandlerMiddleware = require('./middleware/error-handler');
 const notFoundMiddleware = require('./middleware/not-found');
@@ -19,7 +22,7 @@ const notFoundMiddleware = require('./middleware/not-found');
 app.use(express.json());
 
 app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/jobs', jobsRouter);
+app.use('/api/v1/jobs', authMiddleware, jobsRouter); /* 1 */
 app.use(errorHandlerMiddleware);
 app.use(notFoundMiddleware);
 
@@ -35,3 +38,9 @@ const start = async () => {
 }
 
 start();
+
+
+/********** COMMENTS **********
+
+***1: the addition of the middleware "authMiddleware" authenticates the users for all the job routes
+ */ 
